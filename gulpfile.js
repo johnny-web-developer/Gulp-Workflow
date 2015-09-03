@@ -13,7 +13,8 @@ var gulp = require('gulp'),
     pngcrush = require('imagemin-pngcrush'),
     jade = require('jade'),
     gulpjade = require('gulp-jade'),
-    coffee = require('gulp-coffee');
+    coffee = require('gulp-coffee'),
+    fontmin = require('gulp-fontmin');
 
 gulp.task('jade', function () {
 	  gulp.src('builds/development/jade/index.jade')
@@ -30,7 +31,7 @@ gulp.task('compass', function() {
       project: path.join(__dirname, '/builds/development/'),
       css: '../dist/css',        
       sass: 'sass',
-      image: '../dist/images'
+      image: 'images'
     }))
     .on('error', gutil.log)
 
@@ -54,11 +55,19 @@ gulp.task('images', function() {
    .pipe(gulp.dest('builds/dist/images/'))
 });
 
+gulp.task('fontmin', function () {
+  gulp.src('builds/development/fonts/*.ttf')
+    .pipe(fontmin())
+    .pipe(gulp.dest('builds/dist/fonts'));
+});
+
 gulp.task('watch', function() {
   gulp.watch('builds/development/images/**/*', ['images']);
   gulp.watch('builds/development/jade/**/*.jade', ['jade']);
   gulp.watch('builds/development/sass/**/*.scss', ['compass']);
   gulp.watch('builds/development/coffee/**/*.coffee', ['coffee']);
+  gulp.watch('builds/development/fonts/*', ['fontmin']);
+
 });
 
 gulp.task('webserver', function() {
@@ -72,8 +81,9 @@ gulp.task('webserver', function() {
 gulp.task('default', [
   'jade', 
   'compass',
-  'coffee',
   'images',
+  'fontmin',
+  'coffee',
   'webserver',
   'watch'
 ]);
