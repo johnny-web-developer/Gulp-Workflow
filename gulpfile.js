@@ -28,10 +28,10 @@ gulp.task('jade', function () {
 gulp.task('compass', function() {
   gulp.src('builds/development/sass/*.scss')
     .pipe(compass({
-      project: path.join(__dirname, '/builds/development/'),
+      project: path.join(__dirname, 'builds/development/'),
       css: '../dist/css',        
       sass: 'sass',
-      image: 'images'
+      image: '../dist/images'
     }))
     .on('error', gutil.log)
 
@@ -57,7 +57,7 @@ gulp.task('images', function() {
 
 gulp.task('fontmin', function () {
   gulp.src('builds/development/fonts/*.ttf')
-    .pipe(fontmin())
+    .pipe(fontmin({text: 'text'}))
     .pipe(gulp.dest('builds/dist/fonts'));
 });
 
@@ -79,11 +79,11 @@ gulp.task('webserver', function() {
 });
 
 gulp.task('default', [
-  'jade', 
-  'compass',
   'images',
-  'fontmin',
+  'jade', 
+  'compass', 
   'coffee',
+  'fontmin',
   'webserver',
   'watch'
 ]);
